@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10233f">
+<title>Pokémon Advent Calendar 2026</title>
+<style>
+:root{--navy:#10233f;--blue:#1d4168;--red:#e94b4b;--cream:#fff8e8;--gold:#ffd66b;--ice:#d9efff;--green:#4d9b77}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--cream);background:radial-gradient(circle at 15% 10%,#31577e 0,#172f50 36%,#0b1b31 100%);min-height:100vh}
+body:before{content:"✦  ·  ❄  ·  ✧  ·  ❄  ·  ✦";position:fixed;inset:0;pointer-events:none;opacity:.12;font-size:clamp(22px,5vw,48px);letter-spacing:1.2em;line-height:2.5;overflow:hidden;z-index:0}
+.wrap{position:relative;z-index:1;max-width:980px;margin:auto;padding:22px 16px 48px}
+header{text-align:center;padding:18px 12px 24px}
+.kicker{color:var(--gold);font-weight:800;letter-spacing:.18em;font-size:.78rem}
+h1{font-size:clamp(2rem,7vw,4.3rem);line-height:1.02;margin:10px 0 8px;text-shadow:0 4px 0 #071426,0 0 22px #8ecaff66}
+.subtitle{color:#d6e7f8;margin:0 auto;max-width:620px}
+.pokeball{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:50%;border:4px solid #f9f4e9;background:linear-gradient(#e94b4b 0 47%,#172c48 47% 54%,#f9f4e9 54%);vertical-align:middle;margin:0 8px;box-shadow:0 4px 0 #071426}
+.pokeball:after{content:"";width:13px;height:13px;border:4px solid #172c48;background:#fff;border-radius:50%}
+.topline{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:17px}
+.pill{border:1px solid #ffffff35;background:#ffffff10;border-radius:999px;padding:7px 13px;font-size:.85rem;color:#eaf4ff}
+.panel{background:#ffffff0d;border:1px solid #ffffff26;border-radius:24px;padding:18px;box-shadow:0 16px 45px #06132655;backdrop-filter:blur(8px)}
+.calendar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.day{position:relative;min-height:94px;border:2px solid #ffffff30;border-radius:17px;background:linear-gradient(145deg,#244c75,#173454);color:white;font-size:1.6rem;font-weight:900;cursor:pointer;box-shadow:0 5px 0 #09182a;transition:.15s;overflow:hidden}
+.day:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#ffffff16,transparent 55%);pointer-events:none}
+.day .mini{display:block;font-size:1.2rem;margin-top:4px}
+.day:active{transform:translateY(3px);box-shadow:0 2px 0 #09182a}
+.day.locked{opacity:.55;cursor:not-allowed;background:linear-gradient(145deg,#34465b,#243449)}
+.day.done{border-color:#ffd66b;background:linear-gradient(145deg,#347b68,#205344)}
+.day.today{border-color:var(--gold);box-shadow:0 0 0 3px #ffd66b33,0 5px 0 #09182a}
+.day small{display:block;font-size:.68rem;font-weight:650;opacity:.9}
+.section-title{font-size:1.15rem;margin:0 0 13px}
+.note{text-align:center;color:#c9dbee;font-size:.88rem;margin:14px 0 0}
+#game{display:none;margin-top:18px}
+.game-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.back{border:1px solid #ffffff45;background:#ffffff12;color:white;border-radius:12px;padding:9px 13px;font-weight:700;cursor:pointer}
+.day-label{color:var(--gold);font-weight:900;letter-spacing:.08em}
+.game-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:16px}
+figure{margin:0;min-height:250px;border-radius:20px;background:linear-gradient(150deg,#eaf6ff,#c7e2f5);display:grid;place-items:center;padding:18px;position:relative;overflow:hidden}
+figure:before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#ffffff80}
+#pokemon{position:relative;z-index:1;width:min(80%,230px);height:220px;object-fit:contain;image-rendering:pixelated;filter:brightness(0) saturate(100%);transition:filter .4s}
+#pokemon.revealed{filter:none}
+figure figcaption{position:absolute;bottom:10px;color:#31506c;font-size:.72rem;font-weight:800;z-index:2}
+.info{display:flex;flex-direction:column;gap:12px}
+.hint{background:#ffffff10;border:1px solid #ffffff25;border-radius:14px;padding:12px;color:#e5f2ff}
+.word{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin:8px 0}
+.slot{width:clamp(20px,5vw,34px);height:43px;border-bottom:3px solid #ffd66b;display:grid;place-items:center;font-size:clamp(.95rem,3.5vw,1.35rem);font-weight:900;text-transform:uppercase}
+.slot.space{border:0;width:12px}
+.keyboard{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.key{border:0;border-radius:9px;padding:9px 0;background:#edf5ff;color:#173454;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #a8bfd2}
+.key:disabled{opacity:.3;cursor:default;box-shadow:none}
+.key.good{background:#a8e4c5}.key.bad{background:#ffb8b8}
+.status{display:flex;justify-content:space-between;gap:8px;color:#d8e8f8;font-size:.9rem}
+.message{min-height:26px;text-align:center;font-weight:800;color:var(--gold)}
+.action{border:0;border-radius:13px;padding:12px 16px;background:var(--red);color:white;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #9b2929}
+.action.secondary{background:#ffd66b;color:#253b54;box-shadow:0 4px 0 #bd9235}
+.action:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+#collection{margin-top:18px}
+.collection-count{color:var(--gold);font-weight:900}
+.collection-list{display:flex;flex-wrap:wrap;gap:7px}
+.chip{background:#ffffff14;border:1px solid #ffffff25;border-radius:999px;padding:6px 10px;font-size:.82rem}
+footer{text-align:center;color:#a9c1d9;font-size:.76rem;margin-top:22px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#07182b;color:white;border:1px solid #ffffff44;border-radius:14px;padding:12px 16px;box-shadow:0 8px 30px #0008;display:none;z-index:5;max-width:90%;text-align:center}
+@media(max-width:650px){.calendar{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.day{min-height:76px;font-size:1.35rem}.game-grid{grid-template-columns:1fr}figure{min-height:215px}#pokemon{height:180px}.panel{padding:13px}}
+@media(min-width:800px){.calendar{grid-template-columns:repeat(6,minmax(0,1fr))}.day{min-height:110px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">❄ UNA AVENTURA DE NAVIDAD ❄</div>
+  <h1><span class="pokeball"></span>POKÉMON<br>ADVENT CALENDAR</h1>
+  <p class="subtitle">24 días, 24 siluetas misteriosas. ¿Podrás descubrirlos todos?</p>
+  <div class="topline"><span class="pill">🎄 Edición 2026</span><span class="pill">⚡ Modo difícil</span><span class="pill">🎁 6 intentos por reto</span></div>
+</header>
+
+<section id="calendarView" class="panel">
+  <h2 class="section-title">Elige una puerta del calendario</h2>
+  <div id="calendar" class="calendar"></div>
+  <p class="note" id="unlockNote">Cada puerta se abre el día correspondiente de diciembre.</p>
+</section>
+
+<section id="game" class="panel">
+  <div class="game-head">
+    <button class="back" id="backBtn">← Calendario</button>
+    <span class="day-label" id="dayLabel">DÍA 1</span>
+    <span class="pill" id="attemptPill">Intentos: 6</span>
+  </div>
+  <div class="game-grid">
+    <figure>
+      <img id="pokemon" alt="Silueta misteriosa de un Pokémon">
+      <figcaption id="figureCaption">¿QUIÉN SOY?</figcaption>
+    </figure>
+    <div class="info">
+      <div class="hint"><strong>🔎 Pista:</strong> <span id="hintText"></span></div>
+      <div><div class="word" id="word"></div></div>
+      <div class="status"><span id="errors">Errores: 0 / 6</span><span id="progress">Letras: 0</span></div>
+      <div class="keyboard" id="keyboard"></div>
+      <div class="message" id="message" aria-live="polite"></div>
+      <div class="actions">
+        <button class="action secondary" id="hintBtn">Otra pista</button>
+        <button class="action" id="nextBtn" disabled>Siguiente reto →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="collection" class="panel">
+  <h2 class="section-title">⭐ Tu colección <span class="collection-count" id="count">0 / 24</span></h2>
+  <div class="collection-list" id="collectionList"><span class="chip">Todavía no has descubierto ninguno…</span></div>
+</section>
+<footer>Hecho para jugar en familia · ¡Que empiece la aventura!</footer>
+</div>
+<div id="toast"></div>
+<script>
+const YEAR = 2026;
+const MAX_ERRORS = 6;
+// Selección sorpresa: Pokémon de varias generaciones, con dificultad alta.
+const pokemon = [
+ {name:"Sableye",id:302,hints:["Es de tipo Siniestro y Fantasma.","Sus ojos parecen gemas."]},
+ {name:"Mawile",id:303,hints:["Es de tipo Acero y Hada.","Tiene una enorme mandíbula detrás de la cabeza."]},
+ {name:"Duskull",id:355,hints:["Es de tipo Fantasma.","Lleva una máscara con un solo ojo."]},
+ {name:"Shuppet",id:353,hints:["Es de tipo Fantasma.","Le atraen los sentimientos negativos."]},
+ {name:"Absol",id:359,hints:["Es de tipo Siniestro.","Su aparición suele anunciar desastres, aunque no los provoca."]},
+ {name:"Spiritomb",id:442,hints:["Es de tipo Fantasma y Siniestro.","Está formado por 108 espíritus."]},
+ {name:"Drifloon",id:425,hints:["Es de tipo Fantasma y Volador.","Parece un globo morado."]},
+ {name:"Mismagius",id:429,hints:["Es de tipo Fantasma.","Parece una bruja con sombrero."]},
+ {name:"Rotom",id:479,hints:["Es de tipo Eléctrico y Fantasma.","Puede meterse en distintos electrodomésticos."]},
+ {name:"Zorua",id:570,hints:["Es de tipo Siniestro.","Puede crear ilusiones para cambiar de aspecto."]},
+ {name:"Litwick",id:607,hints:["Es de tipo Fantasma y Fuego.","Parece una pequeña vela."]},
+ {name:"Axew",id:610,hints:["Es de tipo Dragón.","Tiene pequeños colmillos que sobresalen de sus mandíbulas."]},
+ {name:"Deino",id:633,hints:["Es de tipo Siniestro y Dragón.","Tiene el cuerpo cubierto por su flequillo."]},
+ {name:"Golett",id:622,hints:["Es de tipo Tierra y Fantasma.","Parece un pequeño gólem de arcilla."]},
+ {name:"Fomantis",id:753,hints:["Es de tipo Planta.","Es más activo durante el día."]},
+ {name:"Mimikyu",id:778,hints:["Es de tipo Fantasma y Hada.","Se disfraza para parecerse a un Pokémon muy famoso."]},
+ {name:"Toxel",id:848,hints:["Es de tipo Eléctrico y Veneno.","Es un Pokémon bebé de aspecto morado."]},
+ {name:"Falinks",id:870,hints:["Es de tipo Lucha.","En realidad es un grupo de pequeñas criaturas que marchan juntas."]},
+ {name:"Dreepy",id:885,hints:["Es de tipo Dragón y Fantasma.","Es muy pequeño y parece un renacuajo prehistórico."]},
+ {name:"Sinistea",id:854,hints:["Es de tipo Fantasma.","Habita dentro de una taza de té."]},
+ {name:"Greavard",id:971,hints:["Es de tipo Fantasma.","Parece un perrito con una vela encendida en la cabeza."]},
+ {name:"Frigibax",id:996,hints:["Es de tipo Dragón y Hielo.","Es el primero de una línea evolutiva de aspecto gélido."]},
+ {name:"Cetoddle",id:974,hints:["Es de tipo Hielo.","Parece una pequeña criatura marina redondeada."]},
+ {name:"Tatsugiri",id:978,hints:["Es de tipo Dragón y Agua.","Tiene aspecto de pequeño sushi."]}
+];
+const alphabet="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+const keyFor=id=>"pokemon-advent-2026-"+id;
+let activeDay=null, answer="", guessed=new Set(), errors=0, hintsUsed=0, finished=false;
+let unlocked = new Date(YEAR, new Date().getMonth(), new Date().getDate());
+function todayDay(){
+ const now=new Date();
+ if(now.getFullYear()<YEAR || (now.getFullYear()===YEAR && now.getMonth()<11)) return 0;
+ if(now.getFullYear()>YEAR || (now.getFullYear()===YEAR && now.getMonth()>11)) return 24;
+ return Math.min(24,now.getDate());
+}
+function saved(){try{return JSON.parse(localStorage.getItem("pokemonAdvent2026")||"{}")}catch(e){return {}}}
+function save(day,name){let s=saved();s[day]=name;localStorage.setItem("pokemonAdvent2026",JSON.stringify(s))}
+function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200)}
+function renderCalendar(){
+ const opened=todayDay(), s=saved(), grid=document.getElementById("calendar");grid.innerHTML="";
+ for(let d=1;d<=24;d++){
+  const b=document.createElement("button");b.className="day";
+  const completed=!!s[d], locked=d>opened;
+  if(completed)b.classList.add("done"); if(locked)b.classList.add("locked"); if(d===opened)b.classList.add("today");
+  b.innerHTML=`${d}<span class="mini">${completed?"⭐":locked?"🔒":"🎁"}</span><small>${completed?"¡Descubierto!":locked?"Próximamente":"Abrir reto"}</small>`;
+  b.disabled=locked;b.addEventListener("click",()=>openDay(d));grid.appendChild(b);
+ }
+ const note=document.getElementById("unlockNote");
+ note.textContent=opened===0?"¡La primera puerta se abrirá el 1 de diciembre de 2026!":opened>=24?"¡Todas las puertas están disponibles!":`Hoy puedes jugar hasta el día ${opened}. ¡Vuelve mañana para abrir la siguiente puerta!`;
+ updateCollection();
+}
+function openDay(day){
+ activeDay=day;let p=pokemon[day-1];answer=p.name.toUpperCase();guessed=new Set();errors=0;hintsUsed=0;finished=!!saved()[day];
+ document.getElementById("calendarView").style.display="none";document.getElementById("game").style.display="block";
+ document.getElementById("dayLabel").textContent="DÍA "+day;
+ document.getElementById("hintText").textContent=p.hints[0];
+ document.getElementById("pokemon").src=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png`;
+ document.getElementById("pokemon").classList.toggle("revealed",finished);
+ document.getElementById("figureCaption").textContent=finished?p.name.toUpperCase():"¿QUIÉN SOY?";
+ document.getElementById("message").textContent=finished?"¡Ya has descubierto este Pokémon!": "¡Adivina el nombre!";
+ document.getElementById("nextBtn").disabled=!finished;
+ document.getElementById("hintBtn").disabled=finished;
+ renderWord();renderKeyboard();updateStatus();
+}
+function renderWord(){
+ const el=document.getElementById("word");el.innerHTML="";
+ [...answer].forEach(ch=>{let s=document.createElement("span");s.className="slot"+(ch===" "?" space":"");s.textContent=(ch===" "||guessed.has(ch)||finished)?ch:"";el.appendChild(s)});
+}
+function renderKeyboard(){
+ const el=document.getElementById("keyboard");el.innerHTML="";
+ alphabet.forEach(ch=>{let b=document.createElement("button");b.className="key";b.textContent=ch;b.disabled=guessed.has(ch)||finished;
+ if(guessed.has(ch))b.classList.add(answer.includes(ch)?"good":"bad");
+ b.addEventListener("click",()=>guess(ch));el.appendChild(b)});
+}
+function updateStatus(){
+ document.getElementById("errors").textContent=`Errores: ${errors} / ${MAX_ERRORS}`;
+ document.getElementById("attemptPill").textContent=`Intentos: ${MAX_ERRORS-errors}`;
+ document.getElementById("progress").textContent=`Letras: ${[...new Set(answer)].filter(x=>guessed.has(x)).length} / ${[...new Set(answer)].length}`;
+}
+function guess(ch){
+ if(finished||guessed.has(ch))return;guessed.add(ch);
+ if(!answer.includes(ch))errors++;
+ if([...answer].every(x=>x===" "||guessed.has(x))){win()}
+ else if(errors>=MAX_ERRORS){lose()}
+ renderWord();renderKeyboard();updateStatus();
+}
+function win(){
+ finished=true;save(activeDay,answer);document.getElementById("pokemon").classList.add("revealed");
+ document.getElementById("figureCaption").textContent=answer;
+ document.getElementById("message").textContent="🎉 ¡CORRECTO! ¡Has descubierto a "+answer+"!";
+ document.getElementById("nextBtn").disabled=false;document.getElementById("hintBtn").disabled=true;
+ updateCollection();
+}
+function lose(){
+ finished=true;document.getElementById("pokemon").classList.add("revealed");
+ document.getElementById("figureCaption").textContent=answer;
+ document.getElementById("message").textContent="¡Se acabaron los intentos! Era "+answer+". ¡A por el siguiente!";
+ document.getElementById("nextBtn").disabled=false;document.getElementById("hintBtn").disabled=true;
+}
+function updateCollection(){
+ const s=saved(),count=Object.keys(s).length;
+ document.getElementById("count").textContent=`${count} / 24`;
+ const list=document.getElementById("collectionList");list.innerHTML="";
+ if(!count){list.innerHTML='<span class="chip">Todavía no has descubierto ninguno…</span>';return}
+ Object.keys(s).sort((a,b)=>+a-+b).forEach(d=>{let c=document.createElement("span");c.className="chip";c.textContent=`Día ${d}: ${s[d]}`;list.appendChild(c)});
+ if(count===24)toast("🏆 ¡Has completado el calendario Pokémon!");
+}
+document.getElementById("hintBtn").addEventListener("click",()=>{
+ const p=pokemon[activeDay-1];if(hintsUsed<p.hints.length-1){hintsUsed++;document.getElementById("hintText").textContent=p.hints[hintsUsed]}else toast("¡Ya has usado todas las pistas!");
+});
+document.getElementById("nextBtn").addEventListener("click",()=>{
+ const next=activeDay+1;
+ document.getElementById("game").style.display="none";document.getElementById("calendarView").style.display="block";
+ if(next<=todayDay())openDay(next);else renderCalendar();
+});
+document.getElementById("backBtn").addEventListener("click",()=>{
+ document.getElementById("game").style.display="none";document.getElementById("calendarView").style.display="block";renderCalendar();
+});
+document.addEventListener("keydown",e=>{let k=e.key.toUpperCase();if(activeDay&&alphabet.includes(k)&&document.getElementById("game").style.display!=="none")guess(k)});
+renderCalendar();
+</script>
+</body>
+</html>
