@@ -116,6 +116,7 @@ footer{text-align:center;color:#a9c1d9;font-size:.76rem;margin-top:22px}
 <script>
 const YEAR = 2026;
 const MAX_ERRORS = 6;
+const STORAGE_KEY = "pokemonAdvent2026";
 // Selección sorpresa: Pokémon de varias generaciones, con dificultad alta.
 const pokemon = [
  {name:"Sableye",id:302,hints:["Es de tipo Siniestro y Fantasma.","Sus ojos parecen gemas."]},
@@ -153,8 +154,8 @@ function todayDay(){
  if(now.getFullYear()>YEAR || (now.getFullYear()===YEAR && now.getMonth()>11)) return 24;
  return Math.min(24,now.getDate());
 }
-function saved(){try{return JSON.parse(localStorage.getItem("pokemonAdvent2026")||"{}")}catch(e){return {}}}
-function save(day,name){let s=saved();s[day]=name;localStorage.setItem("pokemonAdvent2026",JSON.stringify(s))}
+function saved(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")}catch(e){return {}}}
+function save(day,name){let s=saved();s[day]=name;localStorage.setItem(STORAGE_KEY,JSON.stringify(s))}
 function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200)}
 function renderCalendar(){
  const opened=todayDay(), s=saved(), grid=document.getElementById("calendar");grid.innerHTML="";
